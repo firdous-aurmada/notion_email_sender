@@ -1,0 +1,44 @@
+name: Send Emails
+
+on:
+  # Runs every 5 minutes automatically
+  schedule:
+    - cron: '*/5 * * * *'
+
+  # Also adds a manual "Run workflow" button in the GitHub Actions UI
+  workflow_dispatch:
+
+jobs:
+  send:
+    name: Check Notion and send pending emails
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run email sender
+        env:
+          NOTION_API_KEY:          ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID:      ${{ secrets.NOTION_DATABASE_ID }}
+          AZURE_CLIENT_ID:         ${{ secrets.AZURE_CLIENT_ID }}
+          OUTLOOK_REFRESH_TOKEN:   ${{ secrets.OUTLOOK_REFRESH_TOKEN }}
+          COL_NAME:                ${{ secrets.COL_NAME }}
+          COL_EMAIL:               ${{ secrets.COL_EMAIL }}
+          COL_SEND:                ${{ secrets.COL_SEND }}
+          COL_TEMPLATE:            ${{ secrets.COL_TEMPLATE }}
+          COL_VALIDATION_STATUS:   ${{ secrets.COL_VALIDATION_STATUS }}
+          COL_SEND_STATUS:         ${{ secrets.COL_SEND_STATUS }}
+          COL_SENT_AT:             ${{ secrets.COL_SENT_AT }}
+          SEND_DELAY_MS:           ${{ secrets.SEND_DELAY_MS }}
+        run: node scripts/run.js

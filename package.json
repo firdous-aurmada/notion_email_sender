@@ -1,0 +1,14 @@
+{
+  "name": "notion-email-sender",
+  "version": "2.0.0",
+  "description": "Send emails from Notion via GitHub Actions",
+  "scripts": {
+    "get-token": "node scripts/get-token.js",
+    "send": "node scripts/run.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^2.7.0"
+  }
+}
